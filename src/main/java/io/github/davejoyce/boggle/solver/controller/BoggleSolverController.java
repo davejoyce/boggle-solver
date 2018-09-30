@@ -7,7 +7,9 @@
  */
 package io.github.davejoyce.boggle.solver.controller;
 
+import io.github.davejoyce.boggle.solver.model.Alphabet;
 import io.github.davejoyce.boggle.solver.model.BoardSize;
+import io.github.davejoyce.boggle.solver.model.BoggleBoard;
 import io.github.davejoyce.boggle.solver.service.AlphabetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +29,7 @@ import static io.github.davejoyce.boggle.solver.ApplicationConstants.DEFAULT_BOA
 /**
  * Binds HTTP requests for Boggle Solver URLs to application logic.
  *
- * @author <a href="dave@osframwork.org">Dave Joyce</a>
+ * @author <a href="dave@osframework.org">Dave Joyce</a>
  */
 @Controller
 public class BoggleSolverController {
@@ -57,11 +59,16 @@ public class BoggleSolverController {
                                    @PathVariable("boardSize") short size,
                                    Model model) {
     Locale locale = request.getLocale();
+    Alphabet alphabet = alphabetService.getAlphabet(locale);
+
     // Box count = boardSize ^ 2
     BoardSize boardSize = BoardSize.valueOf(size);
     short boxCount = (short)(boardSize.getValue() * boardSize.getValue());
 
-    logger.debug("Language: {}", locale.getDisplayLanguage());
+    BoggleBoard boggleBoard = new BoggleBoard(boardSize);
+
+    logger.debug("Alphabet: (language: {}, letters: {})",
+                 alphabet.getLocale().getDisplayLanguage(), alphabet.getLetters().length);
     logger.debug("Selected Boggle board size: {}", boardSize);
 
     // Populate model for render out to view
@@ -71,6 +78,7 @@ public class BoggleSolverController {
     model.addAttribute("selectedSize", boardSize);
     model.addAttribute("boxCount", boxCount);
     model.addAttribute("alphabet", alphabetService.getAlphabet(locale));
+    model.addAttribute("boggleBoard", boggleBoard);
 
     return "index";
   }
