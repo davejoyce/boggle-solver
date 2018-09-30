@@ -7,6 +7,8 @@
  */
 package io.github.davejoyce.boggle.solver;
 
+import io.github.davejoyce.boggle.solver.model.BoardSize;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -33,5 +35,15 @@ public class ApplicationConstants {
    * Default language locale to be applied, if none is specified.
    */
   public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
+
+  /**
+   * Classpath resource format for locale-specific alphabet.
+   */
+  public static final String FORMAT_LOCALE_ALPHABET = "alphabet/%s.txt";
+
+  /**
+   * Default Boggle board size, if none is specified.
+   */
+  public static final BoardSize DEFAULT_BOARD_SIZE = BoardSize.FOUR;
 
 }

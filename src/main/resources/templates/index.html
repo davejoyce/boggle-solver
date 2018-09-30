@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" th:lang="${#locale.language}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -25,27 +25,6 @@
 
   <!-- Custom styles for this template -->
   <link href="../static/css/basic-template.css" rel="stylesheet" th:href="@{/css/basic-template.css}"/>
-  <style type="text/css">
-    .box {
-      background-color: #444;
-      color: #fff;
-      border-radius: 5px;
-      padding: 20px;
-      font-size: 150%;
-    }
-
-    .box:nth-child(even) {
-      background-color: #ccc;
-      color: #000;
-    }
-
-    .grid-wrapper {
-      width: 400px;
-      display: grid;
-      grid-gap: 10px;
-      grid-template-columns: repeat(4, 100px);
-    }
-  </style>
 </head>
 <body>
   <!-- Navbar -->
@@ -73,7 +52,7 @@
              aria-haspopup="true" aria-expanded="false">Board</a>
           <div class="dropdown-menu" aria-labelledby="boardsize">
             <a class="dropdown-item" th:each="boardSize : ${boardSizes}"
-               th:text="${boardSize.getLabel()}" th:href="@{/(boardSize=${boardSize.getValue()})}">4x4</a>
+               th:text="${boardSize.label}" th:href="@{|/size/${boardSize.value}|}">4x4</a>
           </div>
         </li>
       </ul>
@@ -85,33 +64,33 @@
 
   <!-- Main content area -->
   <main role="main" class="container">
-
-    <div class="basic-template">
-      <h1 th:text="#{greeting}">Welcome to Boggle Solver</h1>
-      <p class="lead" th:text="#{instructions}">Enter the letters of your Boggle board into this grid, then click 'Solve'.</p>
-      <div class="d-flex justify-content-center">
-        <div class="grid-wrapper">
-          <div class="box box1">1</div>
-          <div class="box box2">2</div>
-          <div class="box">3</div>
-          <div class="box">4</div>
-          <div class="box">5</div>
-          <div class="box">6</div>
-          <div class="box">7</div>
-          <div class="box">8</div>
-          <div class="box">9</div>
-          <div class="box">10</div>
-          <div class="box">11</div>
-          <div class="box">12</div>
-          <div class="box">13</div>
-          <div class="box">14</div>
-          <div class="box">15</div>
-          <div class="box">16</div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="d-flex justify-content-center">
+          <h1 th:text="#{greeting}">Welcome to Boggle Solver</h1>
         </div>
       </div>
-      <p class="lead">
-        <a class="btn btn-lg btn-success" href="#" role="button" th:text="#{button}">Solve</a>
-      </p>
+    </div>
+    <div class="row">
+      <div class="basic-template col-8 divider-right">
+        <p class="lead" th:text="#{instructions}">Enter the letters of your Boggle board into this grid.</p>
+        <p><a class="btn btn-lg btn-success" href="#" role="button" th:text="#{button}">Solve</a></p>
+        <div class="d-flex justify-content-center">
+          <form>
+            <div class="grid-wrapper" th:class="'grid-wrapper-' + ${selectedSize.value}">
+              <div class="box" th:each="i : ${#numbers.sequence(1, boxCount)}">
+                <select class="form-control form-control-sm" id="letter" th:id="'letter[' + ${i} + ']'">
+                  <option th:each="letter : ${alphabet}" th:value="${letter}" th:utext="${letter}"></option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <p class="lead">Board: <span th:text="${selectedSize}">4x4</span></p>
+      </div>
+      <div class="col-4">
+        <h3 th:text="#{listHeader}">Words</h3>
+      </div>
     </div>
 
   </main><!-- /.container -->

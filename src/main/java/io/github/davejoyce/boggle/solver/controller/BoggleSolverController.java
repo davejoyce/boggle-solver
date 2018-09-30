@@ -8,15 +8,21 @@
 package io.github.davejoyce.boggle.solver.controller;
 
 import io.github.davejoyce.boggle.solver.model.BoardSize;
+import io.github.davejoyce.boggle.solver.service.AlphabetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
+import java.util.Locale;
+
+import static io.github.davejoyce.boggle.solver.ApplicationConstants.DEFAULT_BOARD_SIZE;
 
 /**
  * Binds HTTP requests for Boggle Solver URLs to application logic.
@@ -28,19 +34,43 @@ public class BoggleSolverController {
 
   private final Logger logger;
 
-  private String appMode;
+  private final String appMode;
+  private final AlphabetService alphabetService;
 
-
-  public BoggleSolverController(Environment environment) {
-    this.appMode = environment.getProperty("app-mode");
-    this.logger = LoggerFactory.getLogger(getClass());
+  @Autowired
+  public BoggleSolverController(Environment environment,
+                                AlphabetService alphabetService) {
+    appMode = environment.getProperty("app-mode");
+    this.alphabetService = alphabetService;
+    logger = LoggerFactory.getLogger(getClass());
+    logger.debug("Application mode: {}", appMode);
   }
 
-  @RequestMapping(value = "/")
-  public String index(Model model) {
+  @GetMapping("/")
+  public String index(WebRequest request,
+                      Model model) {
+    return indexWithBoardSize(request, DEFAULT_BOARD_SIZE.getValue(), model);
+  }
+
+  @GetMapping("/size/{boardSize}")
+  public String indexWithBoardSize(WebRequest request,
+                                   @PathVariable("boardSize") short size,
+                                   Model model) {
+    Locale locale = request.getLocale();
+    // Box count = boardSize ^ 2
+    BoardSize boardSize = BoardSize.valueOf(size);
+    short boxCount = (short)(boardSize.getValue() * boardSize.getValue());
+
+    logger.debug("Language: {}", locale.getDisplayLanguage());
+    logger.debug("Selected Boggle board size: {}", boardSize);
+
+    // Populate model for render out to view
     model.addAttribute("today", new Date());
     model.addAttribute("mode", appMode);
     model.addAttribute("boardSizes", BoardSize.values());
+    model.addAttribute("selectedSize", boardSize);
+    model.addAttribute("boxCount", boxCount);
+    model.addAttribute("alphabet", alphabetService.getAlphabet(locale));
 
     return "index";
   }
