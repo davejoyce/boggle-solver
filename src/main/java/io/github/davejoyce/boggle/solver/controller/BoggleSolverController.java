@@ -18,7 +18,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
@@ -80,6 +82,14 @@ public class BoggleSolverController {
     model.addAttribute("alphabet", alphabetService.getAlphabet(locale));
     model.addAttribute("boggleBoard", boggleBoard);
 
+    return "index";
+  }
+
+  @PostMapping("/size/{boardSize}/solve")
+  public String solveBoggleBoard(@PathVariable("boardSize") short size,
+                                 @ModelAttribute BoggleBoard boggleBoard,
+                                 Model model) {
+    logger.debug("Boggle board to solve: {}", boggleBoard);
     return "index";
   }
 

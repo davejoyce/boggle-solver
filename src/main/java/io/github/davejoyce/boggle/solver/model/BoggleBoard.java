@@ -58,4 +58,13 @@ public class BoggleBoard {
     this.letters = letters;
   }
 
+  @Override
+  public String toString() {
+    final StringBuilder sb = new StringBuilder("BoggleBoard{");
+    sb.append("boardSize=").append(boardSize)
+      .append(", letters=").append(letters)
+      .append('}');
+    return sb.toString();
+  }
+
 }
