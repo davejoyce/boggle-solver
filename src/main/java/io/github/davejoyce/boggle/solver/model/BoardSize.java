@@ -10,7 +10,7 @@ package io.github.davejoyce.boggle.solver.model;
 /**
  * Typesafe enumeration of valid Boggle board sizes.
  *
- * @author <a href="dave@osframwork.org">Dave Joyce</a>
+ * @author <a href="dave@osframework.org">Dave Joyce</a>
  */
 public enum BoardSize {
 
