@@ -24,10 +24,12 @@
     <java.version>1.8</java.version>
 
     <!-- Dependency versions -->
+    <chronicle-map.version>3.16.4</chronicle-map.version>
     <testng.version>6.14.3</testng.version>
   </properties>
 
   <dependencies>
+    <!-- Spring modules -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
@@ -46,6 +48,14 @@
       <optional>true</optional>
     </dependency>
 
+    <!-- Chronicle-Map -->
+    <dependency>
+      <groupId>net.openhft</groupId>
+      <artifactId>chronicle-map</artifactId>
+      <version>${chronicle-map.version}</version>
+    </dependency>
+
+    <!-- Test dependencies -->
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>

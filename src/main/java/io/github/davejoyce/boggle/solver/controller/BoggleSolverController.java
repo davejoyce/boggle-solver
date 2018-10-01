@@ -11,6 +11,7 @@ import io.github.davejoyce.boggle.solver.model.Alphabet;
 import io.github.davejoyce.boggle.solver.model.BoardSize;
 import io.github.davejoyce.boggle.solver.model.BoggleBoard;
 import io.github.davejoyce.boggle.solver.service.AlphabetService;
+import io.github.davejoyce.boggle.solver.service.WordService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
 import java.util.Locale;
+import java.util.Set;
 
 import static io.github.davejoyce.boggle.solver.ApplicationConstants.DEFAULT_BOARD_SIZE;
 
@@ -38,16 +40,18 @@ public class BoggleSolverController {
 
   private final Logger logger;
 
-  private final String appMode;
   private final AlphabetService alphabetService;
+  private final WordService wordService;
 
   @Autowired
   public BoggleSolverController(Environment environment,
-                                AlphabetService alphabetService) {
-    appMode = environment.getProperty("app-mode");
+                                AlphabetService alphabetService,
+                                WordService wordService) {
     this.alphabetService = alphabetService;
+    this.wordService = wordService;
     logger = LoggerFactory.getLogger(getClass());
-    logger.debug("Application mode: {}", appMode);
+    logger.debug("AlphabetService: {}", alphabetService);
+    logger.debug("WordService: {}", wordService);
   }
 
   @GetMapping("/")
@@ -75,7 +79,6 @@ public class BoggleSolverController {
 
     // Populate model for render out to view
     model.addAttribute("today", new Date());
-    model.addAttribute("mode", appMode);
     model.addAttribute("boardSizes", BoardSize.values());
     model.addAttribute("selectedSize", boardSize);
     model.addAttribute("boxCount", boxCount);
@@ -86,11 +89,13 @@ public class BoggleSolverController {
   }
 
   @PostMapping("/size/{boardSize}/solve")
-  public String solveBoggleBoard(@PathVariable("boardSize") short size,
+  public String solveBoggleBoard(WebRequest request,
+                                 @PathVariable("boardSize") short size,
                                  @ModelAttribute BoggleBoard boggleBoard,
                                  Model model) {
     logger.debug("Boggle board to solve: {}", boggleBoard);
-    return "index";
+    model.addAttribute("words", wordService.findWords(boggleBoard, request.getLocale()));
+    return index(request, model);
   }
 
 }

@@ -26,10 +26,17 @@ public class ApplicationConstants {
   public static final String HEADER_ACCEPT_LANGUAGE = "Accept-Language";
 
   /**
+   * Generic locale for the Spanish language, without country.
+   */
+  public static final Locale LOCALE_SPANISH = new Locale("es");
+
+  /**
    * List of recognized language locales as specified by the browser in the
    * 'Accept-Language' HTTP header.
    */
-  public static final List<Locale> LOCALES = Arrays.asList(Locale.ENGLISH, Locale.FRENCH, new Locale("es"));
+  public static final List<Locale> LOCALES = Arrays.asList(Locale.ENGLISH);
+  // TODO cleanup dictionary files before enabling non-English locales
+  // public static final List<Locale> LOCALES = Arrays.asList(Locale.ENGLISH, Locale.FRENCH, LOCALE_SPANISH);
 
   /**
    * Default language locale to be applied, if none is specified.
@@ -42,8 +49,18 @@ public class ApplicationConstants {
   public static final String FORMAT_LOCALE_ALPHABET = "alphabet/%s.txt";
 
   /**
+   * Classpath resource format for locale-specific dictionary file.
+   */
+  public static final String FORMAT_LOCALE_DICTIONARY = "dictionary/%s.txt";
+
+  /**
    * Default Boggle board size, if none is specified.
    */
   public static final BoardSize DEFAULT_BOARD_SIZE = BoardSize.FOUR;
+
+  /**
+   * Maximum allowable word length.
+   */
+  public static final short MAX_WORD_LENGTH = (short) (BoardSize.SIX.getValue() ^ 2);
 
 }
