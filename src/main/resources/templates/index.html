@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" th:lang="${#locale.language}" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <meta name="description" content="Algorithmic solver for game of Boggle"/>
+  <meta name="author" content="Dave Joyce"/>
+  <meta name="msapplication-TileColor" content="#da532c"/>
+  <meta name="theme-color" content="#ffffff"/>
+
+  <link rel="icon" href="../static/favicon.ico" th:href="@{/favicon.ico}" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../static/apple-touch-icon.png" th:href="@{/apple-touch-icon.png}" />
+  <link rel="icon" type="image/png" sizes="32x32" href="../static/favicon-32x32.png" th:href="@{/favicon-32x32.png}" />
+  <link rel="icon" type="image/png" sizes="16x16" href="../static/favicon-16x16.png" th:href="@{/favicon-16x16.png}" />
+  <link rel="manifest" href="../static/site.webmanifest" th:href="@{/site.webmanifest}" />
+  <link rel="mask-icon" href="../static/safari-pinned-tab.svg" th:href="@{/safari-pinned-tab.svg}" color="#5bbad5" />
+
+  <title>Boggle Solver</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous" />
+
+  <!-- Custom styles for this template -->
+  <link href="../static/css/basic-template.css" rel="stylesheet" th:href="@{/css/basic-template.css}"/>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="#" th:href="@{|/size/${boggleBoard.boardSize.value}|}" title="Boggle Solver">
+      <img src="../static/favicon-32x32.png" th:src="@{/favicon-32x32.png}" width="32" height="32" alt="Boggle Solver" />
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#" th:href="@{|/size/${boggleBoard.boardSize.value}|}" title="Boggle Solver">
+            Boggle Solver <span class="sr-only">(current)</span>
+          </a>
+        </li>
+<!--
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+-->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="boardsizes" data-toggle="dropdown"
+             aria-haspopup="true" aria-expanded="false">Board</a>
+          <div class="dropdown-menu" aria-labelledby="boardsizes">
+            <a class="dropdown-item" th:each="boardSize : ${boardSizes}"
+               th:text="${boardSize.label}" th:href="@{|/size/${boardSize.value}|}">4x4</a>
+          </div>
+        </li>
+      </ul>
+      <div class="my-2 my-lg-0">
+        <span class="navbar-text"
+              th:text="${#locale.displayLanguage + ' | ' + #dates.format(today, 'yyyy-MM-dd')}">English | 2018-09-29</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content area -->
+  <main role="main" class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="d-flex justify-content-center">
+          <h1 th:text="#{greeting}">Welcome to Boggle Solver</h1>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="basic-template col-8 divider-right">
+        <p class="lead" th:text="#{instructions}">Enter the letters of your Boggle board into this grid.</p>
+        <div class="d-flex justify-content-center">
+          <!-- Boggle board form -->
+          <form action="#" th:action="@{|/size/${boggleBoard.boardSize.value}/solve|}"
+                th:object="${boggleBoard}" method="post">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-6">
+                  <p>
+                    Board: <span th:text="${boggleBoard.boardSize.label}">4x4</span>
+                    <input type="hidden" id="boardSize" aria-label="Board size"
+                           th:field="*{boardSize}" th:value="${boggleBoard.boardSize.getValue()}" />
+                  </p>
+                </div>
+                <div class="col-md-6">
+                  <p>
+                    <button type="submit" role="button" class="btn btn-sm btn-success"
+                            th:text="#{button}">Solve</button>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="grid-wrapper" th:class="'grid-wrapper-' + ${boggleBoard.boardSize.value}">
+              <div class="box" th:each="i : ${#numbers.sequence(1, boxCount)}">
+                <select class="form-control form-control-sm" id="letter"
+                        th:id="'letters[' + ${iStat.index} + ']'" th:field="*{letters[__${iStat.index}__]}">
+                  <option th:each="letter : ${alphabet.letters}" th:value="${letter}" th:utext="${letter}"></option>
+                </select>
+              </div>
+            </div>
+          </form><!-- /form -->
+        </div>
+      </div>
+      <div class="col-4">
+        <h3 th:text="#{listHeader}">Words</h3>
+        <ul class="mr-auto" th:if="${words != null}">
+          <li th:each="word : ${words}" th:text="${word}">word</li>
+        </ul>
+      </div>
+    </div>
+
+  </main><!-- /.container -->
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+          integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+          integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+          integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+          crossorigin="anonymous"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+</body>
+</html>

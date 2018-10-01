@@ -1,0 +1,45 @@
+body {
+  padding-top: 5rem;
+}
+.basic-template {
+  padding: 1.5rem 1.5rem;
+  text-align: center;
+}
+.divider-right {
+  border-right: 1px solid #444;
+}
+.box {
+  background-color: #444;
+  color: #fff;
+  border-radius: 5px;
+  padding: 20px;
+  font-size: 150%;
+}
+.box:nth-child(even) {
+  background-color: #ccc;
+  color: #000;
+}
+.grid-wrapper {
+  width: 400px;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(4, 100px);
+}
+.grid-wrapper-4 {
+  width: 400px;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(4, 100px);
+}
+.grid-wrapper-5 {
+  width: 500px;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(5, 100px);
+}
+.grid-wrapper-6 {
+  width: 600px;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: repeat(6, 100px);
+}
