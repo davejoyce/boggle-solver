@@ -26,9 +26,9 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.Date;
 import java.util.Locale;
-import java.util.Set;
 
 import static io.github.davejoyce.boggle.solver.ApplicationConstants.DEFAULT_BOARD_SIZE;
+import static io.github.davejoyce.boggle.solver.ApplicationConstants.DEFAULT_LOCALE;
 
 /**
  * Binds HTTP requests for Boggle Solver URLs to application logic.
@@ -94,7 +94,7 @@ public class BoggleSolverController {
                                  @ModelAttribute BoggleBoard boggleBoard,
                                  Model model) {
     logger.debug("Boggle board to solve: {}", boggleBoard);
-    model.addAttribute("words", wordService.findWords(boggleBoard, request.getLocale()));
+    model.addAttribute("words", wordService.findWords(boggleBoard, DEFAULT_LOCALE));
     return index(request, model);
   }
 

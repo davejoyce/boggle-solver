@@ -111,6 +111,9 @@
       </div>
       <div class="col-4">
         <h3 th:text="#{listHeader}">Words</h3>
+        <ul class="mr-auto" th:if="${words != null}">
+          <li th:each="word : ${words}" th:text="${word}">word</li>
+        </ul>
       </div>
     </div>
 
